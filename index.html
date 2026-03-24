@@ -14,6 +14,8 @@
             --btn-primary-bg: #238636;
             --btn-primary-hover: #2ea043;
             --btn-primary-text: #ffffff;
+            --btn-secondary-bg: #21262d;
+            --btn-secondary-hover: #30363d;
             --input-bg: #0d1117;
             --focus-ring: #58a6ff;
             --success-color: #3fb950;
@@ -32,7 +34,7 @@
 
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 1200px; /* 增加宽度以适应双栏 */
             background-color: var(--container-bg);
             border: 1px solid var(--border-color);
             border-radius: 6px;
@@ -44,12 +46,13 @@
             margin-top: 0;
             font-size: 24px;
             font-weight: 600;
-            padding-bottom: 10px;
+            padding-bottom: 15px;
             border-bottom: 1px solid var(--border-color);
             color: var(--text-primary);
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-bottom: 8px;
         }
         
         h2 svg {
@@ -59,12 +62,38 @@
         p {
             color: var(--text-secondary);
             font-size: 14px;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
 
-        textarea {
+        /* 双栏布局 */
+        .split-layout {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap; /* 移动端适配 */
+        }
+
+        .pane {
+            flex: 1;
+            min-width: 300px; /* 防止缩太窄 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pane-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            height: 32px; /* 保持标题栏高度对齐 */
+        }
+
+        textarea, .result-box {
             width: 100%;
-            height: 200px;
+            flex: 1; /* 撑满剩余高度 */
+            min-height: 400px;
             background-color: var(--input-bg);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
@@ -72,10 +101,12 @@
             padding: 12px;
             font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
             font-size: 14px;
-            margin-bottom: 16px;
             box-sizing: border-box;
-            resize: vertical;
             transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        textarea {
+            resize: none; /* 固定高度不让拖拽，由容器决定 */
         }
 
         textarea:focus {
@@ -88,76 +119,64 @@
             color: #484f58;
         }
 
-        button.primary {
-            background-color: var(--btn-primary-bg);
-            color: var(--btn-primary-text);
-            border: 1px solid rgba(240, 246, 252, 0.1);
-            padding: 8px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 20px;
+        .result-box {
+            overflow-y: auto;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+
+        .result-box.has-content {
+            border-color: var(--btn-primary-bg);
+        }
+
+        /* 按钮样式 */
+        button {
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.2s, border-color 0.2s;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+        }
+
+        button.primary {
+            background-color: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            padding: 8px 16px;
+            width: 100%; /* 输入列底部的按钮拉伸 */
+            margin-top: 16px;
         }
 
         button.primary:hover {
             background-color: var(--btn-primary-hover);
         }
 
-        .result-container {
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        #result {
-            background-color: var(--bg-color);
-            color: var(--text-secondary);
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
-            font-size: 14px;
-            word-break: break-all;
-            min-height: 40px;
-            cursor: pointer;
-            transition: border-color 0.2s, color 0.2s;
-            position: relative;
-        }
-
-        #result:hover {
-            border-color: var(--text-secondary);
-        }
-
-        #result.has-content {
-            color: var(--success-color);
-            border-color: var(--btn-primary-bg);
-        }
-
-        #result.has-content:hover {
-            border-color: var(--success-color);
-        }
-        
-        .copy-hint {
-            display: none;
-            position: absolute;
-            right: 12px;
-            top: 12px;
-            background: rgba(48, 54, 61, 0.9);
+        button.secondary {
+            background-color: var(--btn-secondary-bg);
             color: var(--text-primary);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            pointer-events: none;
+            border: 1px solid var(--border-color);
+            padding: 4px 12px;
+            font-size: 13px;
+        }
+
+        button.secondary:hover {
+            background-color: var(--btn-secondary-hover);
+            border-color: #8b949e;
+        }
+
+        button.secondary svg {
+            fill: var(--text-secondary);
         }
         
-        #result:hover .copy-hint {
-            display: block;
+        button.secondary:hover svg {
+            fill: var(--text-primary);
         }
+
     </style>
 </head>
 <body>
@@ -169,18 +188,28 @@
         
         <p>粘贴包含 CDK 的杂乱文本（备注、游戏名等），工具将自动提取 5x5 格式的 CDK 并进行去重：</p>
         
-        <textarea id="input" placeholder="将文本粘贴到这里... (例如: 游戏感谢您的购买 12345-ABCDE-12345-ABCDE-12345)"></textarea>
-        
-        <button class="primary" onclick="extractCDK()">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M11.5 7a4.499 4.499 0 11-8.998 0A4.499 4.499 0 0111.5 7zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"></path></svg>
-            提取并去重
-        </button>
+        <div class="split-layout">
+            <!-- 左侧：输入区 -->
+            <div class="pane flex-col">
+                <div class="pane-header">数据来源</div>
+                <textarea id="input" placeholder="将文本粘贴到这里... (例如: 感谢您的购买 12345-ABCDE-12345-ABCDE-12345)"></textarea>
+                <button class="primary" onclick="extractCDK()">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M11.5 7a4.499 4.499 0 11-8.998 0A4.499 4.499 0 0111.5 7zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"></path></svg>
+                    提取并去重
+                </button>
+            </div>
 
-        <div class="result-container">
-            <p style="margin-bottom: 8px;">提取结果：</p>
-            <div id="result" title="点击即可复制到剪贴板" onclick="copyResult()">
-                <span id="result-text">提取结果将显示在这里...</span>
-                <span class="copy-hint" id="copy-hint">点击复制</span>
+            <!-- 右侧：输出区 -->
+            <div class="pane flex-col">
+                <div class="pane-header">
+                    <span>提取结果：<span id="count" style="color:var(--text-primary);font-weight:bold;margin-left:4px;">0</span> 个</span>
+                    <button class="secondary" onclick="copyResult()" id="copy-btn">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg>
+                        <span id="copy-text">复制结果</span>
+                    </button>
+                </div>
+                <!-- 结果框变为类似textarea的可滚动区域，以保持与左侧等高 -->
+                <div class="result-box" id="result">等待提取...</div>
             </div>
         </div>
     </div>
@@ -190,37 +219,39 @@
 
         function extractCDK() {
             const text = document.getElementById('input').value;
-            // 正则匹配 5x5 格式
             const regex = /[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}/gi;
             const matches = text.match(regex);
             
             const resultBox = document.getElementById('result');
-            const resultTextEl = document.getElementById('result-text');
+            const countSpan = document.getElementById('count');
 
             if (matches) {
-                // 去重逻辑
                 const uniqueCDKs = [...new Set(matches.map(s => s.toUpperCase()))];
-                currentResult = uniqueCDKs.join(',');
-                resultTextEl.innerText = currentResult;
+                currentResult = uniqueCDKs.join('\n'); // 左右分栏情况下，用回车换行更清晰
+                resultBox.innerText = currentResult;
                 resultBox.classList.add('has-content');
-                document.getElementById('copy-hint').innerText = "点击复制";
+                countSpan.innerText = uniqueCDKs.length;
             } else {
                 currentResult = "";
-                resultTextEl.innerText = "未找到符合条件的 CDK";
+                resultBox.innerText = "未找到符合条件的 CDK";
                 resultBox.classList.remove('has-content');
-                document.getElementById('copy-hint').innerText = "无内容可复制";
+                countSpan.innerText = 0;
             }
+            
+            // 重置复制按钮状态
+            document.getElementById('copy-text').innerText = "复制结果";
         }
 
         function copyResult() {
-            if (!currentResult) return;
+            if (!currentResult) {
+                alert('没有可复制的提取结果哦');
+                return;
+            }
             navigator.clipboard.writeText(currentResult).then(() => {
-                const hint = document.getElementById('copy-hint');
-                hint.innerText = "复制成功！";
+                const btnText = document.getElementById('copy-text');
+                btnText.innerText = "已复制!";
                 setTimeout(() => {
-                    if (document.getElementById('result').classList.contains('has-content')) {
-                        hint.innerText = "点击复制";
-                    }
+                    btnText.innerText = "复制结果";
                 }, 2000);
             }).catch(err => {
                 alert('复制失败，请手动选择复制');
