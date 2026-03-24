@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CDK 自动提炼工具</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: auto; background: #f4f7f6; }
+        textarea { width: 100%; height: 200px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ccc; padding: 10px; }
+        button { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #218838; }
+        #result { background: white; padding: 15px; border: 1px dashed #28a745; margin-top: 20px; word-break: break-all; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h2>CDK 自动提炼工具</h2>
+    <p>粘贴包含 CDK 的杂乱文本（备注、游戏名等）：</p>
+    <textarea id="input" placeholder="粘贴到这里..."></textarea>
+    <button onclick="extractCDK()">提取并去重</button>
+
+    <div id="result" title="点击可直接复制">提取结果将显示在这里...</div>
+
+    <script>
+        function extractCDK() {
+            const text = document.getElementById('input').value;
+            // 正则匹配 5x5 格式
+            const regex = /[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}/gi;
+            const matches = text.match(regex);
+            
+            if (matches) {
+                // 去重逻辑
+                const uniqueCDKs = [...new Set(matches.map(s => s.toUpperCase()))];
+                const resultText = uniqueCDKs.join(',');
+                document.getElementById('result').innerText = resultText;
+            } else {
+                document.getElementById('result').innerText = "未找到符合条件的 CDK";
+            }
+        }
+    </script>
+</body>
+</html>
