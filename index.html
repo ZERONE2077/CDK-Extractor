@@ -178,13 +178,18 @@
         button {
             border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
+            transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
             font-weight: 500;
             line-height: 20px;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         button.primary {
@@ -195,7 +200,7 @@
             font-size: 13px;
         }
 
-        button.primary:hover {
+        button.primary:hover:not(:disabled) {
             background-color: var(--btn-primary-hover);
         }
 
@@ -207,7 +212,7 @@
             font-size: 13px;
         }
 
-        button.secondary:hover {
+        button.secondary:hover:not(:disabled) {
             background-color: var(--btn-secondary-hover);
             border-color: #8b949e;
         }
@@ -256,7 +261,7 @@
             <div class="pane flex-col">
                 <div class="pane-header">
                     <span>提取结果：<span id="count" style="color:var(--text-primary);font-weight:bold;margin-left:4px;">0</span> 个</span>
-                    <button class="secondary" onclick="copyResult()" id="copy-btn">
+                    <button class="secondary" onclick="copyResult()" id="copy-btn" disabled>
                         <svg width="14" height="14" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg>
                         <span id="copy-text">复制结果</span>
                     </button>
@@ -277,6 +282,7 @@
             const resultBox = document.getElementById('result');
             const countSpan = document.getElementById('count');
             const format = document.getElementById('format-select').value;
+            const copyBtn = document.getElementById('copy-btn');
 
             if (matches) {
                 const uniqueCDKs = [...new Set(matches.map(s => s.toUpperCase()))];
@@ -295,11 +301,13 @@
                 resultBox.innerText = currentResult;
                 resultBox.classList.add('has-content');
                 countSpan.innerText = uniqueCDKs.length;
+                copyBtn.disabled = false;
             } else {
                 currentResult = "";
                 resultBox.innerText = "未找到符合条件的 CDK";
                 resultBox.classList.remove('has-content');
                 countSpan.innerText = 0;
+                copyBtn.disabled = true;
             }
             
             // 重置复制按钮状态
@@ -307,10 +315,7 @@
         }
 
         function copyResult() {
-            if (!currentResult) {
-                alert('没有可复制的提取结果哦');
-                return;
-            }
+            if (!currentResult) return;
             navigator.clipboard.writeText(currentResult).then(() => {
                 const btnText = document.getElementById('copy-text');
                 btnText.innerText = "已复制!";
