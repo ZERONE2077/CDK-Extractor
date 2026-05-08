@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CDK 自动提炼工具</title>
+    <title>CDK 自动提取工具</title>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
@@ -16,13 +16,13 @@
             --border-color: #30363d;
             --btn-primary-bg: #238636;
             --btn-primary-hover: #2ea043;
-            --btn-primary-text: #ffffff;
             --input-bg: #0d1117;
             --focus-ring: #58a6ff;
             --success-color: #3fb950;
         }
 
-        html, body {
+        html,
+        body {
             height: 100%;
         }
 
@@ -56,7 +56,6 @@
             overflow: hidden;
         }
 
-        /* 标题栏 */
         header {
             display: flex;
             align-items: center;
@@ -79,13 +78,6 @@
             fill: var(--text-primary);
         }
 
-        header .version {
-            margin-left: auto;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        /* 主布局：左1右2 */
         .main-layout {
             display: flex;
             gap: 20px;
@@ -112,7 +104,6 @@
             overflow: hidden;
         }
 
-        /* 区块标题 */
         .section-title {
             font-size: 12px;
             font-weight: 600;
@@ -122,7 +113,6 @@
             margin-bottom: 6px;
         }
 
-        /* 拖拽上传区 */
         .upload-zone {
             border: 2px dashed var(--border-color);
             border-radius: 10px;
@@ -134,7 +124,8 @@
             background: rgba(13, 17, 23, 0.5);
         }
 
-        .upload-zone:hover {
+        .upload-zone:hover,
+        .upload-zone:focus-within {
             border-color: var(--focus-ring);
             background: rgba(88, 166, 255, 0.05);
         }
@@ -170,7 +161,6 @@
             cursor: pointer;
         }
 
-        /* 文件信息条 */
         .file-info {
             display: none;
             align-items: center;
@@ -190,19 +180,21 @@
         .file-info .file-name {
             color: var(--success-color);
             font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         @keyframes fadeIn {
             from {
-                opacity: 0
+                opacity: 0;
             }
 
             to {
-                opacity: 1
+                opacity: 1;
             }
         }
 
-        /* 粘贴区 */
         .paste-area {
             flex: 1;
             display: flex;
@@ -221,10 +213,9 @@
             padding: 12px;
             font-size: 13px;
             font-family: ui-monospace, "Consolas", monospace;
-            font-size: 13px;
             resize: none;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         textarea:focus {
@@ -236,11 +227,11 @@
             color: #484f58;
         }
 
-        /* 右侧结果区 */
         .result-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
             margin-bottom: 10px;
             flex-shrink: 0;
         }
@@ -261,7 +252,6 @@
             color: var(--success-color);
         }
 
-        /* 格式单选 */
         .fmt-group {
             display: inline-flex;
             gap: 4px;
@@ -316,7 +306,6 @@
             color: var(--text-primary);
         }
 
-        /* 按钮 */
         button {
             border-radius: 6px;
             cursor: pointer;
@@ -361,15 +350,22 @@
             fill: currentColor;
         }
 
-        /* 分隔线 */
         .sep {
             height: 1px;
             background: var(--border-color);
             margin: 6px 0;
         }
 
-        /* 响应式 */
         @media (max-width: 768px) {
+            body {
+                padding: 12px 10px;
+            }
+
+            .container {
+                max-width: calc(100vw - 20px);
+                max-height: calc(100vh - 24px);
+            }
+
             .main-layout {
                 flex-direction: column;
             }
@@ -377,11 +373,13 @@
             .left-panel {
                 width: 100%;
                 min-width: 0;
-                max-height: 40%;
+                max-width: none;
+                max-height: 45%;
             }
 
-            body {
-                padding: 12px 10px;
+            .result-header {
+                align-items: flex-start;
+                flex-direction: column;
             }
         }
     </style>
@@ -391,32 +389,31 @@
     <div class="container">
         <header>
             <h1>
-                <svg width="20" height="20" viewBox="0 0 16 16">
+                <svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true">
                     <path fill-rule="evenodd"
                         d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
                 </svg>
-                CDK 提炼工具
+                CDK 提取工具
             </h1>
         </header>
 
         <div class="main-layout">
-            <!-- 左侧：输入 (1/3) -->
             <div class="left-panel">
-                <!-- 文件上传 -->
                 <div>
                     <div class="section-title">文件导入</div>
                     <div class="upload-zone" id="dropzone">
-                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="1.5">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="1.5"
+                            aria-hidden="true">
                             <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
                             <polyline points="17 8 12 3 7 8" />
                             <line x1="12" y1="3" x2="12" y2="15" />
                         </svg>
                         <div class="upload-text">拖拽文件到此处</div>
                         <div class="upload-hint">支持 .zip / .xlsx / .xls / .csv</div>
-                        <input type="file" id="file-input" accept=".zip,.xlsx,.xls,.csv">
+                        <input type="file" id="file-input" accept=".zip,.xlsx,.xls,.csv" aria-label="选择文件">
                     </div>
                     <div class="file-info" id="file-info">
-                        <svg width="16" height="16" fill="var(--success-color)" viewBox="0 0 16 16">
+                        <svg width="16" height="16" fill="var(--success-color)" viewBox="0 0 16 16" aria-hidden="true">
                             <path
                                 d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" />
                         </svg>
@@ -427,15 +424,13 @@
 
                 <div class="sep"></div>
 
-                <!-- 粘贴文本 -->
                 <div class="paste-area">
                     <div class="section-title">或直接粘贴文本</div>
                     <textarea id="input"
-                        placeholder="粘贴包含 CDK 的文本...&#10;&#10;例如：&#10;订单号: 12345&#10;CDK: ABCDE-FGHIJ-KLMNO-PQRST-UVWXY"></textarea>
+                        placeholder="粘贴包含 CDK 的文本...&#10;&#10;例如：&#10;订单号：12345&#10;CDK: ABCDE-FGHIJ-KLMNO-PQRST-UVWXY"></textarea>
                 </div>
             </div>
 
-            <!-- 右侧：结果 (2/3) -->
             <div class="right-panel">
                 <div class="result-header">
                     <div class="result-header-left">
@@ -449,7 +444,7 @@
                         </div>
                     </div>
                     <button class="primary" onclick="copyResult()" id="copy-btn" disabled>
-                        <svg width="15" height="15" viewBox="0 0 16 16">
+                        <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
                             <path fill-rule="evenodd"
                                 d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" />
                             <path fill-rule="evenodd"
@@ -467,104 +462,153 @@
         let currentResult = "";
         let rawTextData = "";
 
-        // ========== 格式切换 ==========
         function setFmt(el, val) {
             document.querySelectorAll('.fmt-opt').forEach(o => o.classList.remove('active'));
+            document.querySelector(`input[name="fmt"][value="${val}"]`).checked = true;
             el.classList.add('active');
             extractCDK();
         }
 
-        // ========== 文件处理 ==========
         const dropzone = document.getElementById('dropzone');
         const fileInput = document.getElementById('file-input');
 
-        dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+        dropzone.addEventListener('dragover', e => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
         dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
         dropzone.addEventListener('drop', e => {
-            e.preventDefault(); dropzone.classList.remove('dragover');
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
             if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
         });
-        fileInput.addEventListener('change', e => { if (e.target.files[0]) processFile(e.target.files[0]); });
+        fileInput.addEventListener('change', e => {
+            if (e.target.files[0]) processFile(e.target.files[0]);
+        });
 
         async function processFile(file) {
             const ext = file.name.split('.').pop().toLowerCase();
-            if (!['zip', 'xlsx', 'xls', 'csv'].includes(ext)) { alert('不支持的文件类型'); return; }
+            if (!['zip', 'xlsx', 'xls', 'csv'].includes(ext)) {
+                alert('不支持的文件类型');
+                return;
+            }
 
             try {
                 let allText = "";
                 if (ext === 'zip') {
                     allText = await processZip(file);
                 } else {
-                    const data = await readFileAsArrayBuffer(file);
-                    const wb = XLSX.read(data, { type: 'array' });
-                    wb.SheetNames.forEach(name => { allText += XLSX.utils.sheet_to_csv(wb.Sheets[name]) + "\n"; });
+                    allText = await readWorkbookText(file);
                 }
+
                 rawTextData = allText;
                 document.getElementById('file-info').classList.add('show');
                 document.getElementById('loaded-filename').textContent = `${file.name} (${formatSize(file.size)})`;
                 extractCDK();
-            } catch (err) { alert('解析失败: ' + err.message); }
+            } catch (err) {
+                alert('解析失败：' + err.message);
+            }
         }
 
         async function processZip(file) {
             const zip = await JSZip.loadAsync(await readFileAsArrayBuffer(file));
-            let found = [];
-            zip.forEach((p, e) => { if (!e.dir && ['xlsx', 'xls', 'csv'].includes(p.split('.').pop().toLowerCase())) found.push(p); });
-            if (!found.length) throw new Error('ZIP 中无表格文件');
-            let txt = "";
-            for (const p of found) {
+            const tableFiles = [];
+            zip.forEach((path, entry) => {
+                const ext = path.split('.').pop().toLowerCase();
+                if (!entry.dir && ['xlsx', 'xls', 'csv'].includes(ext)) tableFiles.push(path);
+            });
+            if (!tableFiles.length) throw new Error('ZIP 中没有表格文件');
+
+            const chunks = [];
+            for (const path of tableFiles) {
                 try {
-                    const wb = XLSX.read(await zip.file(p).async("arraybuffer"), { type: 'array' });
-                    wb.SheetNames.forEach(n => { txt += XLSX.utils.sheet_to_csv(wb.Sheets[n]) + "\n"; });
-                } catch (_) { }
+                    const entry = zip.file(path);
+                    const data = await entry.async("arraybuffer");
+                    chunks.push(readWorkbookArrayBuffer(data));
+                } catch (err) {
+                    console.warn(`跳过无法解析的文件：${path}`, err);
+                }
             }
-            return txt;
+            return chunks.join("\n");
         }
 
-        function readFileAsArrayBuffer(f) {
-            return new Promise((res, rej) => { const r = new FileReader(); r.onload = e => res(new Uint8Array(e.target.result)); r.onerror = rej; r.readAsArrayBuffer(f); });
+        async function readWorkbookText(file) {
+            return readWorkbookArrayBuffer(await readFileAsArrayBuffer(file));
         }
 
-        function clearFile() { rawTextData = ""; fileInput.value = ''; document.getElementById('file-info').classList.remove('show'); updateResult([], true); }
-        function formatSize(b) { return b < 1024 ? b + ' B' : b < 1048576 ? (b / 1024).toFixed(1) + ' KB' : (b / 1048576).toFixed(1) + ' MB'; }
+        function readWorkbookArrayBuffer(buffer) {
+            const wb = XLSX.read(buffer, { type: 'array' });
+            return wb.SheetNames.map(name => XLSX.utils.sheet_to_csv(wb.Sheets[name])).join("\n");
+        }
 
-        // ========== 核心 ==========
+        function readFileAsArrayBuffer(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = e => resolve(e.target.result);
+                reader.onerror = () => reject(reader.error || new Error('读取文件失败'));
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        function clearFile() {
+            rawTextData = "";
+            fileInput.value = '';
+            document.getElementById('file-info').classList.remove('show');
+            extractCDK();
+        }
+
+        function formatSize(bytes) {
+            if (bytes < 1024) return `${bytes} B`;
+            if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`;
+            return `${(bytes / 1048576).toFixed(1)} MB`;
+        }
+
         function extractCDK() {
             const text = rawTextData || document.getElementById('input').value || "";
-            const m = text.match(/[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}/gi);
-            updateResult(m || []);
+            const matches = text.match(/\b[A-Z0-9]{5}(?:-[A-Z0-9]{5}){4}\b/gi);
+            updateResult(matches || [], text.trim() === "");
         }
 
         function updateResult(list, empty = false) {
-            const rb = document.getElementById('result'), cs = document.getElementById('count'), cb = document.getElementById('copy-btn');
+            const resultBox = document.getElementById('result');
+            const count = document.getElementById('count');
+            const copyButton = document.getElementById('copy-btn');
             const fmt = document.querySelector('input[name="fmt"]:checked').value;
 
             if (!empty && list.length) {
-                const u = [...new Set(list.map(s => s.toUpperCase()))];
-                currentResult = fmt === 'comma' ? u.join(',') : u.join('\n');
-                rb.textContent = currentResult;
-                rb.classList.add('has-content');
-                cs.textContent = u.length;
-                cb.disabled = false;
-            } else {
-                currentResult = "";
-                rb.textContent = "未找到符合条件的 CDK";
-                rb.classList.remove('has-content');
-                cs.textContent = "0";
-                cb.disabled = true;
+                const uniqueList = [...new Set(list.map(item => item.toUpperCase()))];
+                currentResult = fmt === 'comma' ? uniqueList.join(',') : uniqueList.join('\n');
+                resultBox.textContent = currentResult;
+                resultBox.classList.add('has-content');
+                count.textContent = uniqueList.length;
+                copyButton.disabled = false;
+                return;
             }
+
+            currentResult = "";
+            resultBox.textContent = empty ? "等待数据输入..." : "未找到符合条件的 CDK";
+            resultBox.classList.remove('has-content');
+            count.textContent = "0";
+            copyButton.disabled = true;
         }
 
         function copyResult() {
             if (!currentResult) return;
+
             navigator.clipboard.writeText(currentResult).then(() => {
-                const btn = document.getElementById('copy-btn'), orig = btn.innerHTML;
-                btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg> 已复制!`;
-                setTimeout(() => btn.innerHTML = orig, 2000);
+                const button = document.getElementById('copy-btn');
+                const originalHTML = button.innerHTML;
+                button.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg> 已复制`;
+                setTimeout(() => button.innerHTML = originalHTML, 2000);
             }).catch(() => alert('复制失败'));
         }
 
-        document.getElementById('input')?.addEventListener('input', () => { rawTextData = ''; extractCDK(); });
+        document.getElementById('input').addEventListener('input', () => {
+            rawTextData = '';
+            document.getElementById('file-info').classList.remove('show');
+            fileInput.value = '';
+            extractCDK();
+        });
     </script>
 </body>
 
